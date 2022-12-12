@@ -3,18 +3,20 @@ from check_guess import CheckGuess
 from start_game import StartGame
 
 import tkinter
-# # TODO - clean up ui, add more words and have the words randomly selected
 
 def select_words():
     """Selects words from the possible_words list and returns a list of 10 words"""
     word_file = open("words.txt", "r")
     possible_words = word_file.read().splitlines()
-    
+    word_file.close()
     selected_words = random.sample(possible_words, 10)
-    print(selected_words)
+
     return selected_words
 
-initialize_game = StartGame(select_words())
+try:
+    initialize_game = StartGame(select_words())
+except ValueError:
+    print('word_list cannot be empty')
 
 def replay():
     """Resets the game"""
@@ -47,14 +49,20 @@ def submit_guess():
     """Submits the user's guess and checks if it is correct"""
     user_guess = [user_input1.get(), user_input2.get(), user_input3.get(), user_input4.get(), user_input5.get(), user_input6.get(), user_input7.get(), user_input8.get(), user_input9.get(), user_input10.get()]
 
-    check_guess = CheckGuess(user_guess, initialize_game.shuffled_word_list)
+    try:
+        check_guess = CheckGuess(user_guess, initialize_game.shuffled_word_list)
+    except ValueError as err:
+        print(err)
 
-    if check_guess.check_user_guess():
-        create_popup("You Win!")
-        replay()
-    else:
-        create_popup("You Lose!")
-        replay()
+    try:
+        if check_guess.check_user_guess():
+            create_popup("You Win!")
+            replay()
+        else:
+            create_popup("You Lose!")
+            replay()
+    except ValueError as err:
+        print(err)
 
 def create_popup(msg):
     """Creates a popup window when the user wins"""
@@ -84,6 +92,7 @@ main.geometry("%dx%d+%d+%d" % (600, 600, x, y))
 start_game_button = tkinter.Button(main, width=80, padx="10", text="Start Game", command=replay)
 start_game_button.grid(row=0, column=0, columnspan=10)
 
+# labels
 label1 = tkinter.Label(main, width=40, pady=10, text=initialize_game.shuffled_word_list[0])
 label1.grid(row=1, column=0, columnspan=5)
 

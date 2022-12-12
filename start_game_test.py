@@ -18,6 +18,11 @@ class StartGameTest(unittest.TestCase):
         with self.assertRaises(ValueError):
             start_game = StartGame('')
 
+    def test_invalid_object(self):
+        with self.assertRaises(ValueError):
+            start_game = StartGame('')
+            start_game.shuffle_words()
+
     def test_word_shuffle(self):
         self.assertNotEqual(self.start_game.shuffled_word_list, self.word_list)
 

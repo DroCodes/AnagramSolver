@@ -1,6 +1,5 @@
 import random
 
-
 class StartGame:
     def __init__(self, word_list):
         if word_list == '':
